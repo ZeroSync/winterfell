@@ -96,7 +96,7 @@ extern crate alloc;
 pub mod fft;
 pub mod polynom;
 
-mod field;
+pub mod field;
 pub use field::{ExtensibleField, ExtensionOf, FieldElement, StarkField};
 pub mod fields {
     //! Finite field implementations.
@@ -104,6 +104,7 @@ pub mod fields {
     //! This module contains concrete implementations of base STARK fields as well as extensions
     //! of these field.
 
+    pub use super::field::f252;
     pub use super::field::f128;
     pub use super::field::f62;
     pub use super::field::f64;

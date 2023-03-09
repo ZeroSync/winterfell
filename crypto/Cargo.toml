@@ -35,6 +35,8 @@ blake2 = { package = "blake2-rfc", version = "0.2"}
 math = { version = "0.4", path = "../math", package = "winter-math", default-features = false }
 sha3 = { version = "0.10", default-features = false }
 utils = { version = "0.4", path = "../utils/core", package = "winter-utils", default-features = false }
+starknet_crypto = { package = "starknet-crypto", git = "https://github.com/xJonathanLEI/starknet-rs" }
+starknet_ff = { package = "starknet-ff", git = "https://github.com/xJonathanLEI/starknet-rs" }
 
 [dev-dependencies]
 criterion = "0.3"

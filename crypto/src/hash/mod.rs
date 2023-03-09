@@ -13,6 +13,9 @@ pub use blake::{Blake3_192, Blake3_256};
 mod blake2s;
 pub use blake2s::{Blake2s_256};
 
+mod pedersen;
+pub use pedersen::{Pedersen_256};
+
 mod sha;
 pub use sha::Sha3_256;
 
