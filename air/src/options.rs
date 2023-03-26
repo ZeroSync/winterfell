@@ -313,6 +313,7 @@ impl HashFunction {
             Self::Blake3_256 => 128,
             Self::Sha3_256 => 128,
             Self::Blake2s_256 => 128,
+            Self::Pedersen_256 => 128
         }
     }
 }
@@ -332,6 +333,7 @@ impl Deserializable for HashFunction {
             2 => Ok(HashFunction::Blake3_256),
             3 => Ok(HashFunction::Sha3_256),
             4 => Ok(HashFunction::Blake2s_256),
+            5 => Ok(HashFunction::Pedersen_256),
             value => Err(DeserializationError::InvalidValue(format!(
                 "value {} cannot be deserialized as HashFunction enum",
                 value

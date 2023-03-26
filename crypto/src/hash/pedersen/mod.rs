@@ -8,28 +8,24 @@ use math::field::f252::{FieldElement, StarkField};
 #[cfg(test)]
 mod tests;
 
-fn pedersen_hash(bytes: &[u8]) -> [u8; 32] {
+pub fn pedersen_hash(bytes: &[u8]) -> [u8; 32] {
     assert_eq!(bytes.len() % 32, 0, "bytes len must be divisible by 32");
-    let len = Fe::from(bytes.len()) * Fe::from_bytes_be(&[ // 32^-1 mod p
-        0x07, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10,
-        0x78, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]).unwrap();
+    let len = Fe::from(bytes.len() / 32);
 
     let hash = bytes.chunks(32).fold(Fe::from(0u8), |hash, slice| {
         let item = {
             let mut chunk = [0u8; 32];
-            for (dst, src) in chunk.iter_mut().zip(slice) {
-                *dst = *src;
-            }
+            write_be_bytes(slice, &mut chunk);
             Fe::from_bytes_be(&chunk).unwrap()
         };
         pedersen(&hash, &item)
     });
-    pedersen(&hash, &len)
-    .to_bytes_be()
-    .try_into()
-    .expect("slice with incorrect length")
+    let result = pedersen(&hash, &len).to_bytes_be();
+
+    let mut digest = [0u8; 32];
+    write_be_bytes(result.as_slice(), &mut digest);
+
+    return digest;
 }
 
 // PEDERSEN 256-BIT OUTPUT
@@ -53,7 +49,7 @@ impl<B: StarkField> Hasher for Pedersen_256<B> {
 
     fn merge_with_int(seed: Self::Digest, value: u64) -> Self::Digest {
         let mut int = [0u8; 32];
-        int[24..].copy_from_slice(&value.to_be_bytes());
+        int[0..8].copy_from_slice(&value.to_le_bytes());
         Self::merge(&[seed, ByteDigest(int)])
     }
 }
@@ -79,7 +75,7 @@ impl<B: StarkField> ElementHasher for Pedersen_256<B> {
 
             let element = {
                 let mut chunk = [0u8; 32];
-                write_be_bytes(src, &mut chunk);
+                write_be_bytes(&src, &mut chunk);
                 Fe::from_bytes_be(&chunk).unwrap()
             } * montgomery;
 
@@ -87,7 +83,13 @@ impl<B: StarkField> ElementHasher for Pedersen_256<B> {
 
         }
 
-        ByteDigest(pedersen_hash(data.as_slice()))
+        let mut data_endian: Vec<u8> = vec![0; elements.len()*E::ELEMENT_BYTES];
+        for (dst, src) in data_endian.chunks_mut(32).zip(data.chunks(32)) {
+
+            write_be_bytes(&src, dst.try_into().unwrap()); 
+        }
+
+        ByteDigest(pedersen_hash(data_endian.as_slice()))
     }
 }
 

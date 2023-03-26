@@ -68,7 +68,7 @@ use math::{
 
 pub use crypto;
 use crypto::{
-    hashers::{Blake3_192, Blake3_256, Blake2s_256, Sha3_256},
+    hashers::{Blake3_192, Blake3_256, Blake2s_256, Sha3_256, Pedersen_256},
     ElementHasher, MerkleTree,
 };
 
@@ -168,6 +168,7 @@ pub trait Prover {
                 HashFunction::Blake2s_256 => self.generate_proof::<Self::BaseField, Blake2s_256<Self::BaseField>>(trace),
                 HashFunction::Blake3_192 => self.generate_proof::<Self::BaseField, Blake3_192<Self::BaseField>>(trace),
                 HashFunction::Sha3_256 => self.generate_proof::<Self::BaseField, Sha3_256<Self::BaseField>>(trace),
+                HashFunction::Pedersen_256 => self.generate_proof::<Self::BaseField, Pedersen_256<Self::BaseField>>(trace),
             },
             FieldExtension::Quadratic => {
                 if !<QuadExtension<Self::BaseField>>::is_supported() {
@@ -178,6 +179,7 @@ pub trait Prover {
                     HashFunction::Blake2s_256 => self.generate_proof::<QuadExtension<Self::BaseField>, Blake2s_256<Self::BaseField>>(trace),
                     HashFunction::Blake3_192 => self.generate_proof::<QuadExtension<Self::BaseField>, Blake3_192<Self::BaseField>>(trace),
                     HashFunction::Sha3_256 => self.generate_proof::<QuadExtension<Self::BaseField>, Sha3_256<Self::BaseField>>(trace),
+                    HashFunction::Pedersen_256 => self.generate_proof::<QuadExtension<Self::BaseField>, Pedersen_256<Self::BaseField>>(trace),
                 }
             }
             FieldExtension::Cubic => {
@@ -189,6 +191,7 @@ pub trait Prover {
                     HashFunction::Blake2s_256 => self.generate_proof::<CubeExtension<Self::BaseField>, Blake2s_256<Self::BaseField>>(trace),
                     HashFunction::Blake3_192 => self.generate_proof::<CubeExtension<Self::BaseField>, Blake3_192<Self::BaseField>>(trace),
                     HashFunction::Sha3_256 => self.generate_proof::<CubeExtension<Self::BaseField>, Sha3_256<Self::BaseField>>(trace),
+                    HashFunction::Pedersen_256 => self.generate_proof::<CubeExtension<Self::BaseField>, Pedersen_256<Self::BaseField>>(trace),
                 }
             }
         }
