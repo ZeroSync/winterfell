@@ -9,6 +9,7 @@ use math::field::f252::{FieldElement, StarkField};
 mod tests;
 
 fn pedersen_hash(bytes: &[u8]) -> [u8; 32] {
+    assert_eq!(bytes.len() % 32, 0, "bytes len must be divisible by 32");
     let len = Fe::from(bytes.len()) * Fe::from_bytes_be(&[ // 32^-1 mod p
         0x07, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10,
         0x78, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

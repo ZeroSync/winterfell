@@ -5,8 +5,9 @@ use rand_utils::rand_array;
 
 #[test]
 fn hash_padding() {
-    let b1 = [1_u8, 2, 3];
-    let b2 = [1_u8, 2, 3, 0];
+    let b1 = [1u8, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let b2 = [1u8, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0u8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     // adding a zero bytes at the end of a byte string should result in a different hash
     let r1 = Pedersen_256::<BaseElement>::hash(&b1);

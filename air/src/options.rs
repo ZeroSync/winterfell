@@ -37,6 +37,10 @@ pub enum HashFunction {
     ///
     /// When this function is used in the STARK protocol, proof security cannot exceed 128 bits.
     Blake2s_256 = 4,
+
+    /// PEDERSEN hash function with 256 bit output.
+    ///
+    Pedersen_256 = 5,
 }
 
 /// Defines an extension field for the composition polynomial.
